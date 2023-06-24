@@ -5,7 +5,8 @@
                 <input
                     class="form-check-input"
                     type="checkbox"
-                    v-model="todo.completed"
+                    :value="todo.completed"
+                    @change="toggleTodo(index)"
                 />
                 <label
                     class="form-check-label"
@@ -33,6 +34,16 @@ export default {
             type: Array,
             required: true,
         },
+    },
+
+    setup(props, context) {
+        const toggleTodo = (index) => {
+            context.emit("toggle-todo", index);
+        };
+
+        return {
+            toggleTodo,
+        };
     },
 };
 </script>
