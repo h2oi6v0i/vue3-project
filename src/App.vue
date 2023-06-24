@@ -1,14 +1,22 @@
 <template>
     <div class="container">
         <h2>To-Do List</h2>
+        <!-- Search -->
+        <input
+            class="form-control"
+            type="text"
+            v-model="searchText"
+            placeholder="Search"
+        />
+        <hr />
         <!-- Form -->
         <TodoSimpleForm @add-todo="addTodo" />
 
-        <div v-if="!todos.length">추가된 Todo가 없습니다.</div>
+        <div v-if="!filteredTodos.length">There is nothing to display!</div>
 
         <!-- List -->
         <TodoList
-            :todos="todos"
+            :todos="filteredTodos"
             @toggle-todo="toggleTodo"
             @delete-todo="deleteTodo"
         />
@@ -16,7 +24,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import TodoSimpleForm from "./components/TodoSimpleForm.vue";
 import TodoList from "./components/TodoList.vue";
 
@@ -28,6 +36,20 @@ export default {
 
     setup() {
         const todos = ref([]);
+        const searchText = ref("");
+
+        /**
+         * 검색 필터링 기능 (여기서 todo는 기존 데이터 아니고 임의로 작명)
+         */
+        const filteredTodos = computed(() => {
+            if (searchText.value) {
+                return todos.value.filter((todo) => {
+                    return todo.subject.includes(searchText.value);
+                });
+            }
+
+            return todos.value;
+        });
 
         /**
          * Todo 추가
@@ -45,14 +67,17 @@ export default {
             todos.value.splice(index, 1);
         };
 
+        /**
+         * Todo 완료/미완료
+         */
         const toggleTodo = (index) => {
-            // console.log(todos.value[index]); 변경(토글) 전
             todos.value[index].completed = !todos.value[index].completed;
-            // console.log(todos.value[index]); 변경(토글) 후
         };
 
         return {
             todos,
+            searchText,
+            filteredTodos,
             addTodo,
             deleteTodo,
             toggleTodo,
