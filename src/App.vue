@@ -7,7 +7,11 @@
         <div v-if="!todos.length">추가된 Todo가 없습니다.</div>
 
         <!-- List -->
-        <TodoList :todos="todos" @toggle-todo="toggleTodo" />
+        <TodoList
+            :todos="todos"
+            @toggle-todo="toggleTodo"
+            @delete-todo="deleteTodo"
+        />
     </div>
 </template>
 
@@ -35,6 +39,7 @@ export default {
 
         /**
          * Todo 삭제
+         * - 자식 컴포넌트에서 보내준 index를 이용하여 해당 함수 실행
          */
         const deleteTodo = (index) => {
             todos.value.splice(index, 1);
