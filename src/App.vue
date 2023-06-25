@@ -60,7 +60,9 @@ export default {
          * - 데이터베이스에 todo 저장(HTTP 요청)한 후 push
          */
         const addTodo = (todo) => {
-            error.value = "";
+            error.value = ""; // 손님1
+
+            // 손님 2
             axios
                 .post("http://localhost:3000/todos", {
                     subject: todo.subject,
@@ -74,6 +76,8 @@ export default {
                     console.log(err);
                     error.value = "Something went wrong.";
                 });
+
+            console.log("HELLO"); // 손님3
         };
 
         /**
