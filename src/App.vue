@@ -92,9 +92,19 @@ export default {
         /**
          * Todo 삭제
          * - 자식 컴포넌트에서 보내준 index를 이용하여 해당 함수 실행
+         * - DB로 삭제 요청 보낸 후, DB에서 삭제되었을 때 todos 배열에서 삭제하기
          */
-        const deleteTodo = (index) => {
-            todos.value.splice(index, 1);
+        const deleteTodo = async (index) => {
+            error.value = "";
+            const id = todos.value[index].id;
+
+            try {
+                await axios.delete(`http://localhost:3000/todos/${id}`);
+                todos.value.splice(index, 1);
+            } catch (err) {
+                console.log(err);
+                error.value = "Something went wrong.";
+            }
         };
 
         /**
