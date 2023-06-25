@@ -11,6 +11,7 @@
         <hr />
         <!-- Form -->
         <TodoSimpleForm @add-todo="addTodo" />
+        <div style="color: red">{{ error }}</div>
 
         <div v-if="!filteredTodos.length">There is nothing to display!</div>
 
@@ -25,6 +26,7 @@
 
 <script>
 import { ref, computed } from "vue";
+import axios from "axios";
 import TodoSimpleForm from "./components/TodoSimpleForm.vue";
 import TodoList from "./components/TodoList.vue";
 
@@ -37,6 +39,7 @@ export default {
     setup() {
         const todos = ref([]);
         const searchText = ref("");
+        const error = ref("");
 
         /**
          * 검색 필터링 기능 (여기서 todo는 기존 데이터 아니고 임의로 작명)
@@ -54,9 +57,23 @@ export default {
         /**
          * Todo 추가
          * - 인자로 받는 todo는 자식 컴포넌트에서 받아 온 데이터
+         * - 데이터베이스에 todo 저장(HTTP 요청)한 후 push
          */
         const addTodo = (todo) => {
-            todos.value.push(todo);
+            error.value = "";
+            axios
+                .post("http://localhost:3000/todos", {
+                    subject: todo.subject,
+                    completed: todo.completed,
+                })
+                .then((res) => {
+                    console.log(res);
+                    todos.value.push(res.data);
+                })
+                .catch((err) => {
+                    console.log(err);
+                    error.value = "Something went wrong.";
+                });
         };
 
         /**
@@ -78,6 +95,7 @@ export default {
             todos,
             searchText,
             filteredTodos,
+            error,
             addTodo,
             deleteTodo,
             toggleTodo,
