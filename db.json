@@ -1,39 +1,24 @@
 {
   "todos": [
     {
-      "subject": "asdf",
-      "completed": false,
+      "subject": "할 일 1",
+      "completed": true,
       "id": 1
     },
     {
-      "subject": "안녕",
-      "completed": false,
+      "subject": "할 일 2",
+      "completed": true,
       "id": 2
     },
     {
-      "subject": "안녕하세요",
+      "subject": "할 일 3",
       "completed": false,
       "id": 3
     },
     {
-      "subject": "zz",
+      "subject": "할 일 4",
       "completed": false,
       "id": 4
-    },
-    {
-      "subject": "res.data",
-      "completed": false,
-      "id": 5
-    },
-    {
-      "subject": "테스트",
-      "completed": false,
-      "id": 6
-    },
-    {
-      "subject": "zfadf",
-      "completed": false,
-      "id": 7
     }
   ]
 }
