@@ -55,6 +55,21 @@ export default {
         });
 
         /**
+         * DB에 있는 데이터 가져오기
+         */
+        const getTodos = async () => {
+            try {
+                const res = await axios.get("http://localhost:3000/todos");
+                todos.value = res.data;
+            } catch (err) {
+                console.log(err);
+                error.value = "Something went wrong.";
+            }
+        };
+
+        getTodos();
+
+        /**
          * Todo 추가
          * - 인자로 받는 todo는 자식 컴포넌트에서 받아 온 데이터
          * - 데이터베이스에 todo 저장(HTTP 요청)한 후 push
@@ -94,6 +109,7 @@ export default {
             searchText,
             filteredTodos,
             error,
+            getTodos,
             addTodo,
             deleteTodo,
             toggleTodo,
