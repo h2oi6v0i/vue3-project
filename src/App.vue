@@ -21,6 +21,45 @@
             @toggle-todo="toggleTodo"
             @delete-todo="deleteTodo"
         />
+
+        <hr />
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li v-if="currentPage !== 1" class="page-item">
+                    <a
+                        style="cursor: pointer"
+                        class="page-link"
+                        @click="getTodos(currentPage - 1)"
+                    >
+                        Previous
+                    </a>
+                </li>
+                <li
+                    v-for="page in numberOfPages"
+                    :key="page"
+                    class="page-item"
+                    :class="{ active: currentPage === page }"
+                >
+                    <a
+                        style="cursor: pointer"
+                        class="page-link"
+                        @click="getTodos(page)"
+                        >{{ page }}</a
+                    >
+                </li>
+                <li v-if="currentPage !== numberOfPages" class="page-item">
+                    <a
+                        style="cursor: pointer"
+                        class="page-link"
+                        @click="getTodos(currentPage + 1)"
+                    >
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </template>
 
@@ -40,6 +79,16 @@ export default {
         const todos = ref([]);
         const searchText = ref("");
         const error = ref("");
+        const numberOfTodos = ref(0);
+        const limit = 5;
+        const currentPage = ref(1);
+
+        /**
+         * 전체 페이지 계산
+         */
+        const numberOfPages = computed(() => {
+            return Math.ceil(numberOfTodos.value / limit);
+        });
 
         /**
          * 검색 필터링 기능 (여기서 todo는 기존 데이터 아니고 임의로 작명)
@@ -55,11 +104,16 @@ export default {
         });
 
         /**
-         * DB에 있는 데이터 가져오기
+         * DB에 있는 데이터 가져오기 w/ pagination
          */
-        const getTodos = async () => {
+        const getTodos = async (page = currentPage.value) => {
+            currentPage.value = page;
+
             try {
-                const res = await axios.get("http://localhost:3000/todos");
+                const res = await axios.get(
+                    `http://localhost:3000/todos?_page=${page}&_limit=${limit}`
+                );
+                numberOfTodos.value = res.headers["x-total-count"];
                 todos.value = res.data;
             } catch (err) {
                 console.log(err);
@@ -128,12 +182,16 @@ export default {
         return {
             todos,
             searchText,
-            filteredTodos,
             error,
+            numberOfTodos,
+            limit,
+            currentPage,
             getTodos,
             addTodo,
             deleteTodo,
             toggleTodo,
+            filteredTodos,
+            numberOfPages,
         };
     },
 };
