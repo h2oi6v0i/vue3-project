@@ -59,25 +59,19 @@ export default {
          * - 인자로 받는 todo는 자식 컴포넌트에서 받아 온 데이터
          * - 데이터베이스에 todo 저장(HTTP 요청)한 후 push
          */
-        const addTodo = (todo) => {
-            error.value = ""; // 손님1
+        const addTodo = async (todo) => {
+            error.value = "";
 
-            // 손님 2
-            axios
-                .post("http://localhost:3000/todos", {
+            try {
+                const res = await axios.post("http://localhost:3000/todos", {
                     subject: todo.subject,
                     completed: todo.completed,
-                })
-                .then((res) => {
-                    console.log(res);
-                    todos.value.push(res.data);
-                })
-                .catch((err) => {
-                    console.log(err);
-                    error.value = "Something went wrong.";
                 });
-
-            console.log("HELLO"); // 손님3
+                todos.value.push(res.data);
+            } catch (err) {
+                console.log(err);
+                error.value = "Something went wrong.";
+            }
         };
 
         /**
